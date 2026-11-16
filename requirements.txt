@@ -1,0 +1,18 @@
+# Audio processing
+yt-dlp
+openai-whisper
+pydub
+
+# LangChain + Gemini
+langchain-core
+langchain-text-splitters
+langchain-google-genai
+
+# Vector DB + embeddings
+langchain-chroma
+langchain-huggingface
+sentence-transformers
+
+# UI + utilities
+streamlit
+python-dotenv

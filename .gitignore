@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.streamlit/secrets.toml
+cookies.txt
+test.py
+Downloads/
+temp_*
+*.wav
+*.webm
+*.m4a
+*.mp3
+*.mp4
+vector_db/
