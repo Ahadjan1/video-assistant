@@ -1,7 +1,7 @@
 import streamlit as st
 from dotenv import load_dotenv
 from yt_dlp.utils import DownloadError
-
+from langchain_google_genai.chat_models import GoogleRateLimitError
 from utils.audio_processing import process_input
 from core.transcriber import transcribe_all
 from core.summarizer import summarize, generate_title
@@ -9,6 +9,17 @@ from core.extractor import extract_action_items, extract_key_decisions, extract_
 from core.rag_engine import build_rag_chain, ask_question
 
 load_dotenv()
+def safe(fn, *args, **kwargs):
+    """Run an LLM step; show a friendly message if the free Gemini quota is used up."""
+    try:
+        return fn(*args, **kwargs)
+    except GoogleRateLimitError:
+        st.error(
+            "The free Gemini API quota for today has been used up, so this demo "
+            "can't generate summaries right now. Please try again later "
+            "(the quota resets daily)."
+        )
+        st.stop()
 
 st.set_page_config(
     page_title="Waveform — AI Meeting Assistant",
@@ -340,19 +351,19 @@ if process_clicked:
         transcript = transcribe_all(chunks, language=language)
 
         step("title")
-        title = generate_title(transcript)
+        title = safe(generate_title, transcript)
 
         step("summary")
-        summary = summarize(transcript)
+        summary = safe(summarize, transcript)
 
         step("actions")
-        action_items = extract_action_items(transcript)
+        action_items = safe(extract_action_items, transcript)
 
         step("decisions")
-        decisions = extract_key_decisions(transcript)
+        decisions = safe(extract_key_decisions, transcript)
 
         step("questions")
-        questions = extract_questions(transcript)
+        questions = safe(extract_questions, transcript)
 
         step("rag")
         rag_chain = build_rag_chain(transcript, k=retrieval_k)
@@ -461,7 +472,7 @@ if st.session_state.active_idx is not None and st.session_state.history:
             st.markdown(question)
         with st.chat_message("assistant"):
             with st.spinner("Thinking..."):
-                answer = ask_question(result["rag_chain"], question)
+                answer = safe(ask_question, result["rag_chain"], question)
                 st.markdown(answer)
         st.session_state.chat_history[idx].append(("assistant", answer))
 else:
