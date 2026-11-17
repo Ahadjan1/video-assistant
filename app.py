@@ -270,7 +270,7 @@ st.markdown(
     <div class="wf-hero">
         {waveform_bars(18)}
         <div class="wf-hero-text">
-         <span class="wf-eyebrow">Local Whisper · Gemini · RAG</span>
+           <span class="wf-eyebrow">Local Whisper · Gemini · RAG</span>
             <h1>AI Meeting Assistant</h1>
             <p>Turn a recording into a transcript, summary, action items — and a conversation.</p>
         </div>
@@ -325,7 +325,7 @@ if process_clicked:
         def done(key):
             pass  # sidebar advances to the next step() call automatically
 
-              step("ingest")
+        step("ingest")
         try:
             chunks = process_input(final_source)
         except DownloadError:
