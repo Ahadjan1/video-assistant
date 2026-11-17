@@ -19,7 +19,7 @@ Transcription runs locally (Whisper). Summarization and extraction use Google Ge
   - Open / unresolved questions
 - **Chat with your meeting:** a RAG pipeline (ChromaDB + HuggingFace embeddings) answers questions grounded only in what was actually said
 - **Export:** download the transcript or a full report as `.txt`
-
+- **Two interfaces:** a CLI (`main.py`) for quick runs, and a full Streamlit web UI (`app.py`)
 ---
 
 ## 🏗️ Architecture
@@ -124,8 +124,37 @@ WHISPER_MODEL=small
 
 ## ▶️ Usage
 
+### Streamlit Web UI (recommended)
+
 ```bash
 streamlit run app.py
 ```
 
-Opens at `http://localhost:8501`. Paste a URL or upload a file, pick a language, and hit **Process**. Then browse the Summary /
+Opens at `http://localhost:8501`. Paste a URL or upload a file, pick a language, and hit **Process**. Then browse the Summary / Action Items / Decisions / Questions / Transcript tabs, download a report, or chat with the meeting.
+
+### CLI
+
+```bash
+python main.py
+```
+
+You'll be prompted for a source (URL or file path) and a language (`english` / `urdu`). After processing, results print in the terminal and you can chat with the transcript right there.
+
+---
+
+## 🗺️ Known Limitations
+
+- Gemini's free tier has a small daily request limit, so only a few meetings can be processed per day
+- YouTube often blocks downloads from cloud servers; on a hosted deployment, use the file upload option
+- Long meetings (2+ hours) transcribe slowly on CPU; a GPU speeds this up significantly
+- Action item / decision / question extraction sends the full transcript in one call; a map-reduce pass (like the summarizer) would help on very long meetings
+- No authentication or multi-user support; built for single-user use
+
+---
+
+## 🙏 Acknowledgments
+
+- [OpenAI Whisper](https://github.com/openai/whisper) for local transcription
+- [LangChain](https://www.langchain.com/) for chain orchestration
+- [Google Gemini](https://ai.google.dev/) for the LLM
+- [ChromaDB](https://www.trychroma.com/) for the vector store
