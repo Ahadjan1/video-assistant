@@ -147,8 +147,8 @@ You'll be prompted for a source (URL or file path) and a language (`english` / `
 
 ## 🗺️ Known Limitations
 
-- Gemini's free tier has a small daily request limit, so only a few meetings can be processed per day
-- YouTube often blocks downloads from cloud servers; on a hosted deployment, use the file upload option
+- **Daily API quota:** the app uses Gemini's free tier, which allows only about 20 requests per day, and processing one meeting uses roughly 8-10 of them. Once the quota is used up, the app shows an error (HTTP 429) until it resets, usually within 24 hours.
+- **YouTube on the hosted demo:** YouTube blocks downloads from cloud servers, so on the live demo use the file upload option. YouTube links work when you run the app locally.
 - Long meetings (2+ hours) transcribe slowly on CPU; a GPU speeds this up significantly
 - Action item / decision / question extraction sends the full transcript in one call; a map-reduce pass (like the summarizer) would help on very long meetings
 - No authentication or multi-user support; built for single-user use
