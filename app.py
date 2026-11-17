@@ -1,5 +1,6 @@
 import streamlit as st
 from dotenv import load_dotenv
+from yt_dlp.utils import DownloadError
 
 from utils.audio_processing import process_input
 from core.transcriber import transcribe_all
@@ -269,7 +270,7 @@ st.markdown(
     <div class="wf-hero">
         {waveform_bars(18)}
         <div class="wf-hero-text">
-            <span class="wf-eyebrow">Local Whisper · Mistral · RAG</span>
+         <span class="wf-eyebrow">Local Whisper · Gemini · RAG</span>
             <h1>AI Meeting Assistant</h1>
             <p>Turn a recording into a transcript, summary, action items — and a conversation.</p>
         </div>
@@ -324,8 +325,16 @@ if process_clicked:
         def done(key):
             pass  # sidebar advances to the next step() call automatically
 
-        step("ingest")
-        chunks = process_input(final_source)
+              step("ingest")
+        try:
+            chunks = process_input(final_source)
+        except DownloadError:
+            st.error(
+                "YouTube blocks downloads from cloud servers, so this link can't be "
+                "processed here. Please upload an audio/video file instead "
+                "(use 'Or upload a local file instead' above)."
+            )
+            st.stop()
 
         step("transcribe")
         transcript = transcribe_all(chunks, language=language)
@@ -346,7 +355,7 @@ if process_clicked:
         questions = extract_questions(transcript)
 
         step("rag")
-        rag_chain = build_rag_chain(transcript)
+        rag_chain = build_rag_chain(transcript, k=retrieval_k)
 
         render_sidebar_pipeline(sidebar_pipeline_slot, total_steps, total_steps, "", complete=True)
 
