@@ -1,5 +1,5 @@
-import whisper
 import os
+import whisper
 
 WHISPER_MODEL = os.getenv("WHISPER_MODEL", "small")
 _model = None
@@ -16,24 +16,22 @@ def load_model():
 
 def transcribe_chunk_whisper(chunk_path: str, task: str = "transcribe", language: str = None) -> str:
     """
-    task="transcribe" -> text in the spoken language (e.g. Urdu -> Urdu script)
-    task="translate"  -> auto-translated to English (English output only, works
-                          best when starting language is set explicitly)
-    language          -> force the spoken language instead of letting Whisper
-                          auto-detect it (auto-detect is often wrong for Urdu)
+    task="transcribe" -> text in the spoken language
+    task="translate"  -> auto-translated to English
+    language          -> force the spoken language instead of auto-detecting
+                         (auto-detect is often wrong for Urdu)
     """
     model = load_model()
     result = model.transcribe(
         chunk_path,
         task=task,
         language=language,
-        beam_size=5,
         temperature=0.0,
-        condition_on_previous_text=True,
+        condition_on_previous_text=False,
+        fp16=False,
     )
-    print(f"✓ Chunk done ({len(result['text'])} characters)")   # <-- ye add karo
+    print(f"Chunk done ({len(result['text'])} characters)")
     return result["text"]
-    
 
 
 def transcribe_chunk(chunk_path: str, language: str = "english") -> str:
