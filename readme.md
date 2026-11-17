@@ -1,4 +1,7 @@
 # 🎙️ Waveform: AI Meeting Assistant
+**🔗 Live Demo:** [video-assistant-agdqlvtcaedwtexupmgh56.streamlit.app](https://video-assistant-agdqlvtcaedwtexupmgh56.streamlit.app/)
+
+> **Note for visitors:** this demo runs on free tiers. If you see a quota or "429" error, the free Gemini API's daily request limit has been reached; please try again later. YouTube links are also blocked on the cloud host, so please use the **file upload** option (a short `.mp3` or `.mp4` works best).
 
 Turn any meeting recording (a YouTube link or a local file) into a clean transcript, a summary, action items, key decisions, and a chat interface you can ask follow-up questions in.
 
